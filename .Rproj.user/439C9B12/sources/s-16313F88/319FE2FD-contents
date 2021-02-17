@@ -1,0 +1,104 @@
+---
+title: "Reactome_hSARS_PPI"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Reactome_hSARS_PPI}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r }
+library(foa)
+
+data(BG43194db, package = "foa")
+GENES <- BG43194db[["GENES"]]
+INTERACTIONS <- BG43194db[["INTERACTIONS"]]
+```
+
+```{r }
+library(biomaRt)
+biomaRt::listAttributes(...)
+```
+
+[github.com/reactome/ReactomeContentService4R](https://github.com/reactome/ReactomeContentService4R)
+
+```{r }
+# remotes::install_github("reactome/ReactomeContentService4R")
+devtools::install_github("reactome/ReactomeContentService4R")
+
+library(ReactomeContentService4R)
+```
+
+```{r }
+# ReactomeContentService4R::
+```
+
+```{r }
+QueryResponse_coagulation <-  ReactomeContentService4R::searchQuery(
+  query = "Coagulation", species = "Homo sapiens"
+)
+
+# print(colnames(QueryResponse_coagulation[[1]]))
+# print(names(QueryResponse_coagulation)[1])
+# print(QueryResponse_coagulation[0:-1])
+
+summary(QueryResponse_coagulation)
+summary(QueryResponse_coagulation[[1]])
+summary(QueryResponse_coagulation[[1]][[1]])
+
+head(QueryResponse_coagulation[["results"]][["entries"]])
+```
+
+```{r }
+toi <- list(
+  "COVID-19" = list(),
+  "coagulation" = list(),
+  "complement" = list(),
+  "inflammation" = list(),
+  "kawasaki" = list()
+)
+
+ToI.results <- foa::Reactome.searchToI(toi)
+
+setNames(
+  lapply(
+    names(ToI.results), 
+    function(term) {
+      entries <- ToI.results[[term]][["results"]][["entries"]]
+      print(head(entries, 1))
+    }
+  ),
+  ToI.results
+)
+# QueryResponse_covid19 <- ReactomeContentService4R::searchQuery(
+#   query = term, # name or dbId or stId of a search term from any class
+#   species = species, # name or taxon id or dbId or abbreviation of species
+#   types = NULL,	# type filter, such as "Protein", "Complex", "Reaction", etc
+#   compartments = NULL, # compartment filter, such as "cytosol", "plasma membrane", "nucleoplasm", etc
+#   keywords = NULL, # keyword filter, such as "binds", "phosphorylates", "transports", etc
+#   cluster = NULL,	# cluster the returned data or not
+#   range = NULL	# start row and the number of rows to include, e.g. range = c(0, 2)
+# )
+```
+
+```{r }
+## ReactomeContentService4R::map2Events(...)
+# Descriptions of functions:
+# 
+# map2RefEntities 
+# ## maps a non-Reactome id to ReferenceEntities that store the given external id
+# 
+# map2Events 
+# ## fetches Events related to a given non-Reactome id
+# 
+# event2Ids 
+# ## gets all non-Reactome ids associated with a given Event
+```
+
